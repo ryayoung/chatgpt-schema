@@ -57,7 +57,9 @@ class Metadata(Model):
     parent_id: str | None = None
     request_id: str | None = None
     timestamp_: Literal['absolute']
-
+    gizmo_id: str | None = None
+    voice_mode_message: bool | None = None
+    requested_model_slug: str | None = None
 
 class FinishDetailsMaxTokens(Model):
     type: Literal['max_tokens']
@@ -100,17 +102,22 @@ class Citation(Model):
 
 
 class CitationMetadata(Model):
-    type: Literal['webpage']
-    title: str
-    url: str
+    type: Literal['webpage','file']
+    name: str | None = None
+    title: str | None = None
+    id: str | None = None
+    source: str | None = None
+    url: str | None = None
     text: str
-    pub_date: None
+    pub_date: None = None
     extra: CitationMetadataExtra
 
 
 class CitationMetadataExtra(Model):
-    evidence_text: Literal['source']
-    cited_message_idx: int
+    evidence_text: str | None = None
+    # below works for my current conversation history but it's not sustainable
+    # evidence_text: Literal['source', '(source)','(Reuters)','(Al Jazeera)', '(AP News)', '(ABC)', '(Wikipedia)'] | None = None
+    cited_message_idx: int | None = None
     search_result_idx: int | None = None
 
 
@@ -124,7 +131,7 @@ class CitationMetadataLegacy(Model):
     title: str
     url: str
     text: str
-    pub_date: None
+    pub_date: None = None
 
 
 CitationsList = list[Citation] | list[CitationLegacy] | list[InvalidCitation]

@@ -14,7 +14,7 @@ class SystemMessage(Model):
     update_time: None
     content: Content
     status: Literal['finished_successfully']
-    end_turn: Literal[True] | None
+    end_turn: bool | None
     weight: float
     metadata: Metadata
     recipient: Literal['all']
@@ -43,6 +43,20 @@ class Metadata(Model):
     parent_id: str | None = None
     request_id: str | None = None
     timestamp_: Literal['absolute'] | None = None
+    attachments: list[Attachment] | None = None
+    voice_mode_message: bool | None = None
+    finish_details: FinishDetails | None = None
+    gizmo_id: str | None = None
+
+
+class FinishDetails(Model):
+    type: Literal['stop']
+    stop_tokens: list[float]
+
+class Attachment(Model):
+    id: str
+    name: str
+    mimeType: str
 
 
 class UserContextMessageData(Model):

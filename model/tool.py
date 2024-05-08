@@ -18,7 +18,7 @@ class ToolMessage(Model):
     end_turn: None
     weight: float
     metadata: Metadata
-    recipient: Literal['all']
+    recipient: Literal['all','assistant']
 
 
 class Author(Model):
@@ -48,6 +48,7 @@ class BrowserDisplayContent(Model):
     result: str
     summary: str | None
     assets: Literal[[], None]  # type:ignore
+    tether_id: None = None
 
 
 class BrowserQuoteContent(Model):
@@ -56,11 +57,12 @@ class BrowserQuoteContent(Model):
     domain: str
     text: str
     title: str
+    tether_id: None = None
 
 
-class MultimodalTextContent(Model):
+class ToolMultimodalTextContent(Model):
     content_type: Literal['multimodal_text']
-    parts: list[ImageContentPart]
+    parts: list[str | ImageContentPart]
 
 
 class ImageContentPart(Model):
@@ -69,7 +71,7 @@ class ImageContentPart(Model):
     size_bytes: int
     width: int
     height: int
-    fovea: int
+    fovea: int | None = None
     metadata: dict
 
 
@@ -79,13 +81,14 @@ Content = (
     | ExecutionOutputContent
     | BrowserDisplayContent
     | BrowserQuoteContent
-    | MultimodalTextContent
+    | ToolMultimodalTextContent
+    | ImageContentPart
 )
 
 
 class Metadata(Model):
     message_type: None
-    model_slug: str
+    model_slug: str | None = None
     timestamp_: Literal['absolute']
     default_model_slug: str | None = None
     parent_id: str | None = None
@@ -98,6 +101,11 @@ class Metadata(Model):
     status: Literal['finished', 'failed'] | None = None
     invoked_plugin: InvokedPlugin | None = None
     finish_details: FinishDetails | None = None
+    is_visually_hidden_from_conversation: Literal[True] | None = None
+    pad: str | None = None
+    jit_plugin_data: dict | None = None
+    gizmo_id: str | None = None
+    voice_mode_message: bool | None = None
 
 
 BrowserCommand = Literal[
@@ -109,6 +117,7 @@ BrowserCommand = Literal[
     'quote',
     'open_url',
     'scroll',
+    'context_stuff',
 ]
 
 

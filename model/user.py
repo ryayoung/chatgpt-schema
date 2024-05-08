@@ -50,8 +50,10 @@ class Metadata(Model):
     request_id: str | None = None
     timestamp_: Literal['absolute']
     message_type: None
-    attachments: list[ImageAttachment | TextFileAttachment] | None = None
+    attachments: list[ImageAttachment | TextFileAttachment | URL] | None = None
     targeted_reply: str | None = None
+    voice_mode_message: Literal[True] | None = None
+    gizmo_id: str | None = None
 
 
 class ImageAttachment(Model):
@@ -59,6 +61,7 @@ class ImageAttachment(Model):
     id: str
     size: int
     mimeType: str | None = None
+    mime_type: str | None = None
     width: int | None = None
     height: int | None = None
 
@@ -67,9 +70,14 @@ class TextFileAttachment(Model):
     name: str
     id: str
     size: int
-    mimeType: Literal['text/plain']
+    mimeType: Literal['text/plain','application/pdf']
     fileTokenSize: int
 
+class URL(Model):
+    name: str
+    url: str
+    id: str
+    size: int
 
 # Keep at end of file
 UserMessage.model_rebuild()
